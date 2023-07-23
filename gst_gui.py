@@ -99,6 +99,10 @@ def start(month="All", year="All", srow=0):
             entries.loc[entries["GSTIN"] == i, "STATUS"] = "Y"
 
             del df
+        df = pd.read_csv(fname)
+        os.remove(fname)
+        df.to_excel(str(fname)[:-3]+"xlsx", index=False)
+        del df
         entries.to_excel(file, index=False)
 
     else:
@@ -158,17 +162,15 @@ def start(month="All", year="All", srow=0):
 
             tem += 1
             entries.loc[entries["GSTIN"] == i, "STATUS"] = "Y"
-        df.to_csv(fname)
+        df.to_excel(str(fname)[:-3]+"xlsx", index=False)
         del df
         entries.to_excel(file, index=False)
 
     tk.messagebox.showinfo(message='Completed!')
     driver.quit()
-
-    os.startfile(fname)
-    root.destroy()
-    # exit program after completion
-    quit()
+    del driver
+    os.startfile(str(fname)[:-3]+"xlsx")
+    root.quit()
     
     return
 
