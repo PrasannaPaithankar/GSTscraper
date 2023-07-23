@@ -174,7 +174,7 @@ def start(month="All", year="All", srow=0, override=0):
     driver.quit()
     del driver
     os.startfile(str(fname)[:-3]+"xlsx")
-    root.quit()
+    # root.quit() # uncomment this to close the window after completion (for Bhushan & Associates)
     
     return
 
