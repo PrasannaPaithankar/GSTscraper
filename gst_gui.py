@@ -14,7 +14,11 @@ from numpy import nan
 st = 0
 driver = None
 
-def start(month="All", year="All", srow=0):
+def start(month="All", year="All", srow=0, override=0):
+    if outfile == "" or file == "":
+        tk.messagebox.showerror(message='Please select input file and output folder!\nGo to Settings tab.')
+        return
+    
     global st
     st = 0
     fname = outfile + "/GST" + time.strftime("%d%m%Y-%H%M") + ".csv"
@@ -32,7 +36,7 @@ def start(month="All", year="All", srow=0):
         f.close()
         for i, j, p in zip(entries["GSTIN"], entries["NAMES"], entries["STATUS"]):
 
-            if p == "Y":
+            if p == "Y" and override == 0:
                 continue
 
             if srow > 2:
@@ -108,9 +112,9 @@ def start(month="All", year="All", srow=0):
     else:
         tem = 0
         df = pd.DataFrame(
-            columns=['GSTIN', 'NAME', month+" 3B", month+" 1/IFF"])
+            columns=['GSTIN', 'NAME', month+" " +year+" 3B", month+" "+year+" 1/IFF"])
         for i, j, p in zip(entries["GSTIN"], entries["NAMES"], entries["STATUS"]):
-            if p == "Y":
+            if p == "Y" and override == 0:
                 continue
 
             if srow > 2:
@@ -151,11 +155,11 @@ def start(month="All", year="All", srow=0):
             t2 = list(chain.from_iterable(t2))
             for k in range(len(t1)):
                 if t1[k] == month and t1[k-1] == year:
-                    df.loc[tem, month+" 3B"] = t1[k+1]
+                    df.loc[tem, month+" " +year+" 3B"] = t1[k+1]
 
             for k in range(len(t2)):
                 if t2[k] == month and t2[k-1] == year:
-                    df.loc[tem, month+" 1/IFF"] = t2[k+1]
+                    df.loc[tem, month+" " +year+" 1/IFF"] = t2[k+1]
 
             df.loc[tem, 'GSTIN'] = i
             df.loc[tem, 'NAME'] = j
@@ -197,17 +201,34 @@ def inpFileButton():
     return
 
 
-def thr(month, year, srow):
-    t = Thread(target=start, args=(month, year, srow))
+def thr(month, year, srow, override):
+    t = Thread(target=start, args=(month, year, srow, override))
     t.start()
     return
 
 
 def stop():
-    global st
-    st = 1
-    global driver
-    driver.quit()
+    # askyes no
+    ans = tk.messagebox.askyesno(title="Abort", message="Are you sure you want to abort?")
+    if ans == True:
+        global st
+        st = 1
+        global driver
+        driver.quit()
+        return
+    return
+
+def createSampleFile():
+    if outfile == "":
+        tk.messagebox.showerror(message='Please select output folder!\nGo to Settings tab.')
+        return
+    fname = outfile + "/Sample Input File.xlsx"
+    df = pd.DataFrame(columns=['GSTIN', 'NAMES', 'STATUS'])
+    try:
+        df.to_excel(fname, index=False)
+    except:
+        tk.messagebox.showerror(message='File already exists!')
+    tk.messagebox.showinfo(message='Sample Input File created!')
     return
 
 
@@ -236,18 +257,22 @@ if __name__ == "__main__":
 
     # output folder
     filenameLabel = tk.Label(
-        settings, text="Output Folder: {}".format(outfile))
+        settings, text="Output Folder: {}".format(outfile), justify="left")
     filenameLabel.grid(row=0, column=0, padx=5, pady=10)
     outfileButton = tk.Button(settings, text="Select",
                               width=15, command=lambda: outFolderButton())
     outfileButton.grid(row=0, column=1, padx=5, pady=10)
 
     # input file
-    inpfileLabel = tk.Label(settings, text="Input File: {}".format(file))
+    inpfileLabel = tk.Label(settings, text="Input File: {}".format(file), justify="left")
     inpfileLabel.grid(row=1, column=0, padx=5, pady=10)
     inpfileButton = tk.Button(settings, text="Select",
                               width=15, command=lambda: inpFileButton())
     inpfileButton.grid(row=1, column=1, padx=5, pady=10)
+
+    # create sample input file button
+    sampleButton = tk.Button(settings, text="Create Sample Input File", width=20, command=lambda: createSampleFile())
+    sampleButton.grid(row=2, column=0, padx=0, pady=10, )
 
     # dropdown for specific month and year
     monthLabel = tk.Label(run, text="Month:")
@@ -273,19 +298,23 @@ if __name__ == "__main__":
     startrowEntry.insert(0, "2")
     startrowEntry.grid(row=3, column=1, padx=5, pady=10)
 
+    # override status chechbox
+    override = tk.IntVar()
+    overrideCheck = tk.Checkbutton(run, text="Override Status", variable=override, onvalue=1, offvalue=0)
+    overrideCheck.grid(row=4, column=0, padx=5, pady=10)
 
     # start button
     startButton = tk.Button(run, text="Start", width=15,
-                            command=lambda: thr(month.get(), year.get(), int(startrowEntry.get())))
-    startButton.grid(row=4, column=0, padx=5, pady=10)
+                            command=lambda: thr(month.get(), year.get(), int(startrowEntry.get()), override.get()))
+    startButton.grid(row=5, column=0, padx=5, pady=10)
 
     # abort button
     abortButton = tk.Button(run, text="Abort", width=15,
                             command=lambda: stop())
-    abortButton.grid(row=4, column=1, padx=5, pady=10)
+    abortButton.grid(row=5, column=1, padx=5, pady=10)
 
     # about
-    aboutLabel = tk.Label(about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.3.2 (2023)", justify="left")
+    aboutLabel = tk.Label(about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)", justify="left")
     aboutLabel.grid(row=0, column=0, padx=5, pady=10)
 
     root.mainloop()
