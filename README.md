@@ -3,7 +3,8 @@
 ![GitHub](https://img.shields.io/github/license/PrasannaPaithankar/GSTscraper)
 ![Static Badge](https://img.shields.io/badge/Windows-green)
 
-A tkinter program aimed to ease the process of data-organizing for Chartered Accountants and Tax Professionals in India. Scrapes GST filing details for the input clients into a 
+A tkinter program aimed to ease the process of data-organizing for Chartered Accountants and Tax Professionals in India. Scrapes GST filing details for the input clients into an Excel sheet.
+
 ### System Requirements
 1. Windows 10/11 <br>
 2. Python-3.7 or higher
