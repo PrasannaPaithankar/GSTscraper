@@ -2,6 +2,7 @@
 ![Static Badge](https://img.shields.io/badge/version-1.0.0-blue)
 ![GitHub](https://img.shields.io/github/license/PrasannaPaithankar/GSTscraper)
 ![Static Badge](https://img.shields.io/badge/Windows-green)
+![Static Badge](https://img.shields.io/badge/tkinter-magenta)
 
 A tkinter program aimed to ease the process of data-organizing for Chartered Accountants and Tax Professionals in India. Scrapes GST filing details for the input clients into an Excel sheet.
 
