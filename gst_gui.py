@@ -231,10 +231,14 @@ def createSampleFile():
     tk.messagebox.showinfo(message='Sample Input File created!')
     return
 
+def openGitHub():
+    import webbrowser
+    webbrowser.open('https://github.com/PrasannaPaithankar/GSTscraper', new=2)
+    return
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("GST")
+    root.title("GSTscraper")
 
     tabControl = ttk.Notebook(root)
     run = ttk.Frame(tabControl)
@@ -255,6 +259,7 @@ if __name__ == "__main__":
         outfile = ""
         file = ""
 
+    ############################## SETTINGS ##############################
     # output folder
     filenameLabel = tk.Label(
         settings, text="Output Folder: {}".format(outfile), justify="left")
@@ -274,6 +279,7 @@ if __name__ == "__main__":
     sampleButton = tk.Button(settings, text="Create Sample Input File", width=20, command=lambda: createSampleFile())
     sampleButton.grid(row=2, column=0, padx=0, pady=10, )
 
+    ############################## RUN ##############################
     # dropdown for specific month and year
     monthLabel = tk.Label(run, text="Month:")
     monthLabel.grid(row=1, column=0, padx=5, pady=10)
@@ -313,8 +319,13 @@ if __name__ == "__main__":
                             command=lambda: stop())
     abortButton.grid(row=5, column=1, padx=5, pady=10)
 
+    ############################# ABOUT ############################
     # about
-    aboutLabel = tk.Label(about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)", justify="left")
+    aboutLabel = tk.Label(about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)\nGPL-3.0 License", justify="left")
     aboutLabel.grid(row=0, column=0, padx=5, pady=10)
+    licenseFile = tk.Button(about, text="License", width=15, command=lambda: os.startfile("LICENSE"))
+    licenseFile.grid(row=1, column=0, padx=5, pady=10)
+    githubLink = tk.Button(about, text="GitHub", width=15, command=lambda: openGitHub())
+    githubLink.grid(row=1, column=1, padx=5, pady=10)
 
     root.mainloop()
