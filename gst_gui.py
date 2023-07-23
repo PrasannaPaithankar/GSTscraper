@@ -49,10 +49,11 @@ def start(month="All", year="All", srow=0, override=0):
             finally:
                 idinput = driver.find_element(By.ID, "for_gstin")
                 idinput.send_keys(i)
+                (driver.find_element(By.ID, "fo-captcha")).send_keys("")
 
             if st == 1:
                 break
-
+            
             a = 0
             while (a == 0):
                 try:
@@ -127,6 +128,7 @@ def start(month="All", year="All", srow=0, override=0):
             finally:
                 idinput = driver.find_element(By.ID, "for_gstin")
                 idinput.send_keys(i)
+                (driver.find_element(By.ID, "fo-captcha")).send_keys("")
             
             if st == 1:
                 break
@@ -208,13 +210,10 @@ def thr(month, year, srow, override):
 
 
 def stop():
-    # askyes no
     ans = tk.messagebox.askyesno(title="Abort", message="Are you sure you want to abort?")
     if ans == True:
         global st
         st = 1
-        global driver
-        driver.quit()
         return
     return
 
