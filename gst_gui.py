@@ -14,11 +14,13 @@ from numpy import nan
 st = 0
 driver = None
 
+
 def start(month="All", year="All", srow=0, override=0):
     if outfile == "" or file == "":
-        tk.messagebox.showerror(message='Please select input file and output folder!\nGo to Settings tab.')
+        tk.messagebox.showerror(
+            message='Please select input file and output folder!\nGo to Settings tab.')
         return
-    
+
     global st
     st = 0
     fname = outfile + "/GST" + time.strftime("%d%m%Y-%H%M") + ".csv"
@@ -51,20 +53,24 @@ def start(month="All", year="All", srow=0, override=0):
                 idinput.send_keys(i)
                 (driver.find_element(By.ID, "fo-captcha")).send_keys("")
 
-            if st == 1:
-                break
-            
             a = 0
             while (a == 0):
-                try:
-                    element = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.ID, "filingTable")))
-                except:
-                    pass
+                if st == 1:
+                    a = 2
+                
                 else:
-                    a = 1
-                    tablebut = driver.find_element(By.ID, "filingTable")
-                    tablebut.click()
+                    try:
+                        element = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((By.ID, "filingTable")))
+                    except:
+                        pass
+                    else:
+                        a = 1
+                        tablebut = driver.find_element(By.ID, "filingTable")
+                        tablebut.click()
+
+            if a == 2:
+                break
 
             while (len(driver.find_elements(By.CLASS_NAME, "table")) <= 1):
                 time.sleep(0.1)
@@ -113,7 +119,7 @@ def start(month="All", year="All", srow=0, override=0):
     else:
         tem = 0
         df = pd.DataFrame(
-            columns=['GSTIN', 'NAME', month+" " +year+" 3B", month+" "+year+" 1/IFF"])
+            columns=['GSTIN', 'NAME', month+" " + year+" 3B", month+" "+year+" 1/IFF"])
         for i, j, p in zip(entries["GSTIN"], entries["NAMES"], entries["STATUS"]):
             if p == "Y" and override == 0:
                 continue
@@ -129,21 +135,24 @@ def start(month="All", year="All", srow=0, override=0):
                 idinput = driver.find_element(By.ID, "for_gstin")
                 idinput.send_keys(i)
                 (driver.find_element(By.ID, "fo-captcha")).send_keys("")
-            
-            if st == 1:
-                break
-            
+
             a = 0
             while (a == 0):
-                try:
-                    element = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.ID, "filingTable")))
-                except:
-                    pass
-                else:
-                    a = 1
-                    tablebut = driver.find_element(By.ID, "filingTable")
-                    tablebut.click()
+                if st == 1:
+                    a = 2
+                else:    
+                    try:
+                        element = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((By.ID, "filingTable")))
+                    except:
+                        pass
+                    else:
+                        a = 1
+                        tablebut = driver.find_element(By.ID, "filingTable")
+                        tablebut.click()
+
+            if a == 2:
+                break
 
             while (len(driver.find_elements(By.CLASS_NAME, "table")) <= 1):
                 time.sleep(0.1)
@@ -157,11 +166,11 @@ def start(month="All", year="All", srow=0, override=0):
             t2 = list(chain.from_iterable(t2))
             for k in range(len(t1)):
                 if t1[k] == month and t1[k-1] == year:
-                    df.loc[tem, month+" " +year+" 3B"] = t1[k+1]
+                    df.loc[tem, month+" " + year+" 3B"] = t1[k+1]
 
             for k in range(len(t2)):
                 if t2[k] == month and t2[k-1] == year:
-                    df.loc[tem, month+" " +year+" 1/IFF"] = t2[k+1]
+                    df.loc[tem, month+" " + year+" 1/IFF"] = t2[k+1]
 
             df.loc[tem, 'GSTIN'] = i
             df.loc[tem, 'NAME'] = j
@@ -177,7 +186,7 @@ def start(month="All", year="All", srow=0, override=0):
     del driver
     os.startfile(str(fname)[:-3]+"xlsx")
     # root.quit() # uncomment this to close the window after completion (for Bhushan & Associates)
-    
+
     return
 
 
@@ -210,16 +219,19 @@ def thr(month, year, srow, override):
 
 
 def stop():
-    ans = tk.messagebox.askyesno(title="Abort", message="Are you sure you want to abort?")
+    ans = tk.messagebox.askyesno(
+        title="Abort", message="Are you sure you want to abort?")
     if ans == True:
         global st
         st = 1
         return
     return
 
+
 def createSampleFile():
     if outfile == "":
-        tk.messagebox.showerror(message='Please select output folder!\nGo to Settings tab.')
+        tk.messagebox.showerror(
+            message='Please select output folder!\nGo to Settings tab.')
         return
     fname = outfile + "/Sample Input File.xlsx"
     df = pd.DataFrame(columns=['GSTIN', 'NAMES', 'STATUS'])
@@ -230,10 +242,12 @@ def createSampleFile():
     tk.messagebox.showinfo(message='Sample Input File created!')
     return
 
+
 def openGitHub():
     import webbrowser
     webbrowser.open('https://github.com/PrasannaPaithankar/GSTscraper', new=2)
     return
+
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -268,14 +282,16 @@ if __name__ == "__main__":
     outfileButton.grid(row=0, column=1, padx=5, pady=10)
 
     # input file
-    inpfileLabel = tk.Label(settings, text="Input File: {}".format(file), justify="left")
+    inpfileLabel = tk.Label(
+        settings, text="Input File: {}".format(file), justify="left")
     inpfileLabel.grid(row=1, column=0, padx=5, pady=10)
     inpfileButton = tk.Button(settings, text="Select",
                               width=15, command=lambda: inpFileButton())
     inpfileButton.grid(row=1, column=1, padx=5, pady=10)
 
     # create sample input file button
-    sampleButton = tk.Button(settings, text="Create Sample Input File", width=20, command=lambda: createSampleFile())
+    sampleButton = tk.Button(settings, text="Create Sample Input File",
+                             width=20, command=lambda: createSampleFile())
     sampleButton.grid(row=2, column=0, padx=0, pady=10, )
 
     ############################## RUN ##############################
@@ -305,7 +321,8 @@ if __name__ == "__main__":
 
     # override status chechbox
     override = tk.IntVar()
-    overrideCheck = tk.Checkbutton(run, text="Override Status", variable=override, onvalue=1, offvalue=0)
+    overrideCheck = tk.Checkbutton(
+        run, text="Override Status", variable=override, onvalue=1, offvalue=0)
     overrideCheck.grid(row=4, column=0, padx=5, pady=10)
 
     # start button
@@ -320,11 +337,14 @@ if __name__ == "__main__":
 
     ############################# ABOUT ############################
     # about
-    aboutLabel = tk.Label(about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)\nGPL-3.0 License", justify="left")
+    aboutLabel = tk.Label(
+        about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)\nGPL-3.0 License", justify="left")
     aboutLabel.grid(row=0, column=0, padx=5, pady=10)
-    licenseFile = tk.Button(about, text="License", width=15, command=lambda: os.startfile("LICENSE"))
+    licenseFile = tk.Button(about, text="License",
+                            width=15, command=lambda: os.startfile("LICENSE"))
     licenseFile.grid(row=1, column=0, padx=5, pady=10)
-    githubLink = tk.Button(about, text="GitHub", width=15, command=lambda: openGitHub())
+    githubLink = tk.Button(about, text="GitHub", width=15,
+                           command=lambda: openGitHub())
     githubLink.grid(row=1, column=1, padx=5, pady=10)
 
     root.mainloop()
