@@ -108,13 +108,14 @@ def start(month="All", year="All", srow=0, override=0):
             df.loc[1, 'NAME'] = j
             df.to_csv(fname, mode='a', header=False)
             entries.loc[entries["GSTIN"] == i, "STATUS"] = "Y"
-
+            df.to_csv("./temp.csv", header=None, index=None, mode='a')
             del df
         df = pd.read_csv(fname)
         os.remove(fname)
         df.to_excel(str(fname)[:-3]+"xlsx", index=False)
         del df
         entries.to_excel(file, index=False)
+        os.remove("./temp.csv")
 
     else:
         tem = 0

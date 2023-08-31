@@ -1,4 +1,5 @@
 config.txt
+temp.csv
 /build
 /dist
 *.spec
