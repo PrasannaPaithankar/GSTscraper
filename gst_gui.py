@@ -338,7 +338,7 @@ if __name__ == "__main__":
     ############################# ABOUT ############################
     # about
     aboutLabel = tk.Label(
-        about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.0 (2023)\nGPL-3.0 License", justify="left")
+        about, text="Developed by: Prasanna Paithankar\nfor Bhushan & Associates\nVersion: 1.0.1 (2023)\nGPL-3.0 License", justify="left")
     aboutLabel.grid(row=0, column=0, padx=5, pady=10)
     licenseFile = tk.Button(about, text="License",
                             width=15, command=lambda: os.startfile("LICENSE"))
