@@ -46,7 +46,7 @@ def start(month="All", year="All", srow=0, override=0):
                 continue
 
             try:
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 20).until(
                     EC.presence_of_element_located((By.ID, "for_gstin")))
             finally:
                 idinput = driver.find_element(By.ID, "for_gstin")
@@ -60,7 +60,7 @@ def start(month="All", year="All", srow=0, override=0):
                 
                 else:
                     try:
-                        element = WebDriverWait(driver, 10).until(
+                        element = WebDriverWait(driver, 20).until(
                             EC.presence_of_element_located((By.ID, "filingTable")))
                     except:
                         pass
@@ -129,7 +129,7 @@ def start(month="All", year="All", srow=0, override=0):
                 continue
 
             try:
-                element = WebDriverWait(driver, 10).until(
+                element = WebDriverWait(driver, 20).until(
                     EC.presence_of_element_located((By.ID, "for_gstin")))
             finally:
                 idinput = driver.find_element(By.ID, "for_gstin")
@@ -142,7 +142,7 @@ def start(month="All", year="All", srow=0, override=0):
                     a = 2
                 else:    
                     try:
-                        element = WebDriverWait(driver, 10).until(
+                        element = WebDriverWait(driver, 20).until(
                             EC.presence_of_element_located((By.ID, "filingTable")))
                     except:
                         pass
